@@ -1,0 +1,5 @@
+"Intercept" "Latitude" "color"
+"(Intercept)" 116.869960988296 -1.6332899869961 "Blue"
+"(Intercept)1" -12.5208062418725 0.578673602080623 "Melanistic"
+"(Intercept)2" -20.8615084525357 1.17945383615084 "Intermediate"
+"(Intercept)3" 16.5123537061118 -0.12483745123537 "Aberrant"
