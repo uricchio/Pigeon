@@ -13,9 +13,9 @@ from collections import defaultdict
 
 class SimulatePlumage():
 
-    def __init__(self,N=100000,s_a=-0.01,s_A=-0.1,p=0.9,S=0.01,alpha=12.09,beta=0.39,x_T=38,dx_T=1):
+    def __init__(self,N=10000,s_a=-0.01,s_A=-0.001,p=0.8,S=0.0001,alpha=12.09,beta=0.39,x_T=38,dx_T=1):
         self.N = N
-        self.s_a = s_a
+        self.s_A = s_A
         self.p = p
         self.S = S
         self.a = alpha
@@ -27,7 +27,7 @@ class SimulatePlumage():
         self.d_a = 0
         self.d_A = 0
         self.getDays()
-        self.s_A = self.get_sA(p)
+        self.s_a = self.get_sa(p)
 
     # function to do W-F model given current population status
     def nextGen(self):
@@ -53,7 +53,8 @@ class SimulatePlumage():
 
         self.t += 1
         return
-  
+
+    # gamma model   
     def TotalDgTmax(self,x_T):
 
         a = self.a
@@ -71,6 +72,14 @@ class SimulatePlumage():
 
         return (1 + num/denom)
 
+    # linear model
+    def TotalDgTmaxLin(self,x_T0,m):
+        
+        t = self.t
+        if t > 100:
+             t = 100
+        return m*t + x_T0
+
     # function to select new d_A and d_a
     def getDays(self):
  
@@ -80,11 +89,9 @@ class SimulatePlumage():
         return
 
     def qEq(self):
-    
         return (self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a)
 
-    def get_sA(self,q):
-
-        return (-q*self.s_a-(1-self.S)**self.d_a+(1-self.S)**self.d_A)/(q-1)
+    def get_sa(self,q):
+        return ((1-q)*self.s_A-(1-self.S)**self.d_a+(1-self.S)**self.d_A)/q
         
 
