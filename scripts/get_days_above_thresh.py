@@ -21,6 +21,9 @@ for line in fh:
     if len(data) < 4:
         continue
  
+    month = int(data[2][5:7])
+    if month < 4 or month > 10:
+        continue
     year = int(data[2][0:4])	
     temp = float(data[3][:-1])
    
@@ -32,12 +35,12 @@ for line in fh:
     if temp > thresh:
         daysAbove[year] += 1
 
-    if temp > thresh-2:
+    if temp > thresh-5:
         daysAboveMin1[year] += 1
     
     daysTot[year] += 1
 
 for year in daysAbove:
-    if daysTot[year] > 360:
+    if daysTot[year] > 200:
         print (year, daysAbove[year]/daysTot[year], daysAboveMin1[year]/daysTot[year])
 
