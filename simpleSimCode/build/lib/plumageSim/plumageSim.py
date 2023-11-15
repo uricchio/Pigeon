@@ -16,15 +16,14 @@ from scipy.stats import skewnorm
 
 class SimulatePlumage():
 
-    def __init__(self,N=1000000,s_a=-0.01,s_A=-0.005,p=0.5,S=0.002,x_T=41,dx_T=0.5,
-                  fileName = "/Users/telemacher/projects/Pigeon/tempData/test",
-                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+    def __init__(self,N=1000000,s_a=-0.0002,s_A=-0.001,p=0.5,S=0.001,x_T=38,dx_T=0.5, d=0.05,
+                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =1940):
         self.N = N
         self.s_A = s_A
         self.p = p
         self.S = S
-        self.d = 0.02
+        self.d = d
         self.dx_T = dx_T
         self.x_T = x_T
         self.t = 0
@@ -33,7 +32,6 @@ class SimulatePlumage():
         self.paramsSkewNorm = {}
         self.year = year
         self.year0 = year
-        self.fileName = fileName
         self.tempFile = tempFile
         self.daysAbove = {}
         self.getSkewNormal()
@@ -60,7 +58,7 @@ class SimulatePlumage():
         f = np.random.binomial(2*self.N, fExp)/(self.N*2)
         self.p = f**2
 
-        print(self.p,fExp**2,self.qEq(),self.p*(self.x_T-self.dx_T)+(1-self.p)*(self.x_T),((1-self.S)**self.d_a-(1-self.S)**self.d_A))
+        print(self.p,fExp**2,self.qEq(),self.p*(self.x_T-self.dx_T)+(1-self.p)*(self.x_T),((1-self.S)**self.d_a-(1-self.S)**self.d_A),self.S*(self.d_A-self.d_a),self.x_T,self.year-1939)
 
         self.year += 1
         return
@@ -109,7 +107,7 @@ class SimulatePlumage():
     def get_sa(self,q):
         return ((1-q)*self.s_A-(1-self.S)**self.d_a+(1-self.S)**self.d_A)/q
  
-    def getSkewNormal(self):
+    def getSkewNormal(self,prParams=False):
         fh=open(self.tempFile,'r')
 
         # skip first line
@@ -142,6 +140,57 @@ class SimulatePlumage():
         for year in temps:
             params = skewnorm.fit(temps[year]) #,floc=np.mean(temps[year])))  
             self.paramsSkewNorm[int(year)] = [params[0], params[1], params[2]]
-            #print(year, params[0], params[1], params[2], params[1] + params[2]*((2/np.pi)**0.5) *params[0]/(1+params[0]**2)**0.5, np.mean(temps[year]))
+             
+            if prParams and year != 1945:
+                print(year, params[0], params[1], params[2], params[1] + params[2]*((2/np.pi)**0.5) *params[0]/(1+params[0]**2)**0.5, np.mean(temps[year]))
 
 
+    def getdA_minus_da(self):
+
+        fh=open(self.tempFile,'r')
+
+        # skip first line
+        for line in fh:
+            break
+
+        temps = {}
+
+        # get temp data
+        for line in fh:
+            line = line.strip()
+            line=line.replace("\",\"","*")
+            data=line.split("*")
+
+            if len(data) < 4:
+                 continue
+
+            # don't include winter months
+            month = int(data[2][5:7])
+            if month < 4 or month > 9:
+                continue
+
+            year = int(data[2][0:4])
+            temp = (float(data[3][:-1])-32)*5/9
+
+            if year not in temps:
+                temps[year] = []
+            temps[year].append(temp)
+
+        # for each year, get the number of days above x_T and x_T-dx_T and expected number of days above x_T and dx_T
+        for year in temps:
+            if year != 1945:
+                exp_above_0 = skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2])
+                exp_above_1 = skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2])
+                emp_above_0 = 0
+                emp_above_1 = 0
+
+                for temp in temps[year]:
+                    if temp > self.x_T:
+                        emp_above_0 += 1
+                    if temp > self.x_T-self.dx_T:
+                        emp_above_1 += 1
+
+                emp_above_0 /= len(temps[year])    
+                emp_above_1 /= len(temps[year])    
+
+                print(year,self.x_T,self.dx_T, 1-exp_above_0,emp_above_0,1-exp_above_1,emp_above_1)
