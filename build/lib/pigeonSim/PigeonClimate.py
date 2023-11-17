@@ -46,7 +46,7 @@ class SimulatePigeon():
         pop[("F",0,"b")] = N_female_vec[0][0]
         pop[("F",0,"B")] = N_female_vec[0][1]
         pop[("F",0,"A")] = N_female_vec[0][2]
-     
+ 
         self.pop = pop
      
         # now make arrays of individuals with Geno, Sex, Age, and exposure
@@ -202,8 +202,4 @@ class SimulatePigeon():
 
         # make pop values for each geno
         return
-
-
-
-        
 
