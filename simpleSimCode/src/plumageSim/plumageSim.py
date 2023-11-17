@@ -16,8 +16,8 @@ from scipy.stats import skewnorm
 
 class SimulatePlumage():
 
-    def __init__(self,N=1000000,s_a=-0.0002,s_A=-0.001,p=0.5,S=0.001,x_T=38,dx_T=0.5, d=0.05,
-                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+    def __init__(self,N=1000000,s_a=-0.0002,s_A=-0.001,p=0.5,S=0.0001,x_T=38,dx_T=0.5, d=0.05,
+                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =1940):
         self.N = N
         self.s_A = s_A
@@ -63,43 +63,16 @@ class SimulatePlumage():
         self.year += 1
         return
 
-    # skewnorm model   
-    def TotalDgTmax(self,x_T,useYears =False):
-        
-        scale = 0
-        loc = 0
-        alpha = 0
-        if useYears:
-            year = self.year
-            if self.year < 2022:
-                while year not in self.paramsSkewNorm:
-                    year-=1    
-            else:
-                year = 2022
-            scale = self.paramsSkewNorm[year][2]
-            alpha = self.paramsSkewNorm[year][0]
-            loc = self.paramsSkewNorm[year][1] 
-
-        else:
-           if self.year < 2100: 
-               scale = self.paramsSkewNorm[self.year0][2]
-               alpha = self.paramsSkewNorm[self.year0][0]
-               loc = self.paramsSkewNorm[self.year0][1]+self.d*(self.year-self.year0)
-           else: 
-               scale = self.paramsSkewNorm[self.year0][2]
-               alpha = self.paramsSkewNorm[self.year0][0]
-               loc = self.paramsSkewNorm[self.year0][1]+self.d*(2100-self.year0)
-
-        t1 = 0.5*(1+erf(((x_T-loc)/scale)/(2**0.5)))
-        t2 = owens_t((x_T-loc)/scale,alpha)
-
-        return t1 - 2*t2
-    
     # function to select new d_A and d_a
     def getDays(self):
  
-        self.d_A = 183*self.TotalDgTmax(self.x_T)
-        self.d_a = 183*self.TotalDgTmax(self.x_T-self.dx_T)
+        offset = self.d*(self.year-self.year0)
+        if self.year > 2100:
+            offset = self.d*(2100-self.year0)
+
+        year = self.year0
+        self.d_A = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_a = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
 
     def qEq(self):
         return (self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a)

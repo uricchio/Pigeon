@@ -1,6 +1,5 @@
-from pigeonSim import PigeonClimate
+from pigeonSim import plumageSim
 
-pop = PigeonClimate.SimulatePigeon()
-
-for i in range(500):
+pop = plumageSim.SimulatePigeon()
+for i in range(0,25):
     pop.nextGen()
