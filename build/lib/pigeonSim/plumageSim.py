@@ -17,8 +17,8 @@ class SimulatePigeon():
 
     # blue is most common, so s_b should have weakest frequency-dependent penalty
 
-    def __init__(self,N=1000000,s_A=-0.01,s_b=-0.00001,s_B=-0.005,p=0.05,q=0.1,S=0.001,x_T=53,dx_T_B=0.5,dx_T_b=1,d=0.05,
-                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+    def __init__(self,N=1000000,s_A=-0.01,s_b=-0.001,s_B=-0.005,p=0.05,q=0.1,S=0.001,x_T=43,dx_T_B=0.5,dx_T_b=1,d=0.05,
+                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =1940):
         self.N = N
         self.s_A = s_A
@@ -116,9 +116,9 @@ class SimulatePigeon():
             offset = self.d*(2000-self.year0)
 
         year = self.year0
-        self.d_A = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
-        self.d_B = 183*(1-skewnorm.cdf(self.x_T-self.dx_T_B,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
-        self.d_b = 183*(1-skewnorm.cdf(self.x_T-self.dx_T_b,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
+        self.d_A = 183*(skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_B = 183*(skewnorm.cdf(self.x_T-self.dx_T_B,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
+        self.d_b = 183*(skewnorm.cdf(self.x_T-self.dx_T_b,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
 
     def qEq(self):
         return (self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a)
