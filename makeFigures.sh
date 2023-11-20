@@ -1,4 +1,6 @@
 # tomorrow
+# remake figures for sims with correcion added
+# fix calc of d_A-d_a in new pigeon sim and see if that gets it to work
 # CHECK 1. make phoenix temp dist figure with best fit dist for summer months (skew normal)
 # CHECK 2. remake the figure with inc and decreasing (d_A-d_a) proportions of the dist
 # CHECK 3. make sim figure showing how outcomes can range
@@ -6,12 +8,12 @@
 # 5. add NCZ
 
 # make temp data
-#python simpleSimCode/scripts/tempParams.py > tempData/Phoenix.TMax.params.txt
-#python simpleSimCode/scripts/tempParamsNY.py > tempData/NewYork.TMax.params.txt
+python simpleSimCode/scripts/tempParams.py > tempData/Phoenix.TMax.params.txt
+python simpleSimCode/scripts/tempParamsNY.py > tempData/NewYork.TMax.params.txt
 
 # make plots of d_A-d_a
-#python simpleSimCode/scripts/tempAbove_x_T.py  > tempData/diff_dA_da.x_T.txt
-#python simpleSimCode/scripts/tempAbove_x_TNY.py  > tempData/diff_dA_da.x_T.NY.txt
+python simpleSimCode/scripts/tempAbove_x_T.py  > tempData/diff_dA_da.x_T.txt
+python simpleSimCode/scripts/tempAbove_x_TNY.py  > tempData/diff_dA_da.x_T.NY.txt
 
 
 # simulate pop-gen for different T thresholds

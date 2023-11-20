@@ -17,8 +17,8 @@ class SimulatePigeon():
 
     # blue is most common, so s_b should have weakest frequency-dependent penalty
 
-    def __init__(self,N=1000000,s_A=0,s_b=0,s_B=0,p=0.02,q=0.25,S=0.001,x_T=38,dx_T_B=0.25,dx_T_b=0.5,d=0.05,
-                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+    def __init__(self,N=1000000,s_A=-0.01,s_b=-0.00001,s_B=-0.005,p=0.05,q=0.1,S=0.001,x_T=53,dx_T_B=0.5,dx_T_b=1,d=0.05,
+                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =1940):
         self.N = N
         self.s_A = s_A
@@ -48,8 +48,6 @@ class SimulatePigeon():
         
         self.getDays()       
   
-        print(self.d_A,self.d_B,self.d_b)
-
         A_Pheno_male = self.p**2 + 2*self.p*self.q + 2*self.p*(1-(self.p+self.q)) 
         B_Pheno_male = 2*(1-self.p-self.q)*self.q + self.q**2
         b_Pheno_male = (1-(self.p+self.q))**2 
@@ -102,52 +100,25 @@ class SimulatePigeon():
 
         # get allele frequencies from genotype frequencies
 
-        self.p = (2*new_male_counts[0]+new_male_counts[1]+new_male_counts[2]+new_female_counts[0])/(3*self.N)
-        self.q = (2*new_male_counts[3]+new_male_counts[4]+new_male_counts[1]+new_female_counts[1])/(3*self.N)
-    
-        #print(self.p, self.q, 1-self.p-self.q)
+        self.p = 2*(2*new_male_counts[0]+new_male_counts[1]+new_male_counts[2]+new_female_counts[0])/(3*self.N)
+        self.q = 2*(2*new_male_counts[3]+new_male_counts[4]+new_male_counts[1]+new_female_counts[1])/(3*self.N)
+            
+
+        print(self.p, self.q, 1-self.p-self.q,self.d_A,self.d_B,self.d_b)
   
         self.year += 1
         return
 
-    # skewnorm model   
-    def TotalDgTmax(self,x_T,useYears =False):
-        
-        scale = 0
-        loc = 0
-        alpha = 0
-        if useYears:
-            year = self.year
-            if self.year < 2022:
-                while year not in self.paramsSkewNorm:
-                    year-=1    
-            else:
-                year = 2022
-            scale = self.paramsSkewNorm[year][2]
-            alpha = self.paramsSkewNorm[year][0]
-            loc = self.paramsSkewNorm[year][1] 
-
-        else:
-           if self.year < 2100: 
-               scale = self.paramsSkewNorm[self.year0][2]
-               alpha = self.paramsSkewNorm[self.year0][0]
-               loc = self.paramsSkewNorm[self.year0][1]+self.d*(self.year-self.year0)
-           else: 
-               scale = self.paramsSkewNorm[self.year0][2]
-               alpha = self.paramsSkewNorm[self.year0][0]
-               loc = self.paramsSkewNorm[self.year0][1]+self.d*(2100-self.year0)
-
-        t1 = 0.5*(1+erf(((x_T-loc)/scale)/(2**0.5)))
-        t2 = owens_t((x_T-loc)/scale,alpha)
-
-        return t1 - 2*t2
-    
-    # function to select new d_A and d_a
     def getDays(self):
- 
-        self.d_A = 183*self.TotalDgTmax(self.x_T)
-        self.d_B = 183*self.TotalDgTmax(self.x_T-self.dx_T_B)
-        self.d_b = 183*self.TotalDgTmax(self.x_T-self.dx_T_b)
+
+        offset = self.d*(self.year-self.year0)
+        if self.year > 2000:
+            offset = self.d*(2000-self.year0)
+
+        year = self.year0
+        self.d_A = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_B = 183*(1-skewnorm.cdf(self.x_T-self.dx_T_B,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
+        self.d_b = 183*(1-skewnorm.cdf(self.x_T-self.dx_T_b,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))    
 
     def qEq(self):
         return (self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a)

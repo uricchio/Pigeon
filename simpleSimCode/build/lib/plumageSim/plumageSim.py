@@ -16,8 +16,8 @@ from scipy.stats import skewnorm
 
 class SimulatePlumage():
 
-    def __init__(self,N=1000000,s_a=-0.0002,s_A=-0.001,p=0.5,S=0.0001,x_T=38,dx_T=0.5, d=0.05,
-                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+    def __init__(self,N=1000000,s_a=-0.000001,s_A=-0.000001,p=0.5,S=0.001,x_T=48, dx_T=1, d=0.01,
+                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =1940):
         self.N = N
         self.s_A = s_A
@@ -71,11 +71,11 @@ class SimulatePlumage():
             offset = self.d*(2100-self.year0)
 
         year = self.year0
-        self.d_A = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
-        self.d_a = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_a = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_A = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
 
     def qEq(self):
-        return (self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a)
+        return ((self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a))
 
     def get_sa(self,q):
         return ((1-q)*self.s_A-(1-self.S)**self.d_a+(1-self.S)**self.d_A)/q
