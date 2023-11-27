@@ -30,5 +30,29 @@ plot_grid(plA,plB,labels=c("A","B"),ncol=2,rel_widths = c(1,1.3))
 
 ggsave("~/projects/Pigeon/Figures/popGenSims.pdf",height=3.2,width=11)
 
+# pigeon sims
 
+read.table("~/projects/Pigeon/simData/sim.Pigeon.d.0.02.Phoenix.txt")->p0p02
+read.table("~/projects/Pigeon/simData/sim.Pigeon.d.0.1.Phoenix.txt")->p0p1
+
+read.table("~/projects/Pigeon/simData/sim.Pigeon.d.0.02.Manhattan.txt")->m0p02
+read.table("~/projects/Pigeon/simData/sim.Pigeon.d.0.1.Manhattan.txt")->m0p1
+
+makePlot<- function(data) {
+  plotDataFrame<-data.frame()
+  i <- 1
+  for (row in data) {
+    if (i <= 1940) {
+      i<-i+1
+      next
+    }
+    
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V1[i],geno="A"))
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V2[i],geno="B"))
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V3[i],geno="b"))
+    i <- i + 1
+  }  
+  
+  return(plotDataFrame)
+}
 
