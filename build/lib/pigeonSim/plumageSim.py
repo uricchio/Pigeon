@@ -8,7 +8,7 @@ class SimulatePigeon():
     # blue is most common, so s_b should have weakest frequency-dependent penalty
 
     def __init__(self,N=100000,s_A=-0.005,s_b=-0.0002,s_B=-0.0001,p=0.1,q=0.3,S=0.001,x_T=43,dx_T_B=0.5,dx_T_b=1,d=0.1,
-                  tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
+                  tempFile="/Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
                   year =0):
         self.N = N
         self.s_A = s_A
@@ -73,9 +73,9 @@ class SimulatePigeon():
         f_bb_exp/= totFit
 
         # get female freqs
-        f_A_exp = WA_female*self.p  
-        f_B_exp = WB_female*self.q
-        f_b_exp = Wb_female*(1-self.p-self.q)
+        f_A_exp = WA_male*self.p  
+        f_B_exp = WB_male*self.q
+        f_b_exp = Wb_male*(1-self.p-self.q)
 
         totFit = f_A_exp+f_B_exp+f_b_exp
         f_A_exp /= totFit 

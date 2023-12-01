@@ -22,8 +22,8 @@
 #python simpleSimCode/scripts/sim.py  0.5 0.1 > simData/sim.dx_T.0.5.d.0.1.txt
 
 # simulate pigeon populations
-python scripts/simPigeonPop.py 0.02 /Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv > simData/sim.Pigeon.d.0.02.Phoenix.txt
-python scripts/simPigeonPop.py 0.1 /Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv  > simData/sim.Pigeon.d.0.1.Phoenix.txt
-python scripts/simPigeonPop.py 0.02 /Users/uricchio/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.02.Manhattan.txt
-python scripts/simPigeonPop.py 0.1 /Users/uricchio/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.1.Manhattan.txt
+python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv > simData/sim.Pigeon.d.0.02.Phoenix.txt
+python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv  > simData/sim.Pigeon.d.0.1.Phoenix.txt
+python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.02.Manhattan.txt
+python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.1.Manhattan.txt
 
