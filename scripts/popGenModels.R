@@ -41,18 +41,33 @@ read.table("~/projects/Pigeon/simData/sim.Pigeon.d.0.1.Manhattan.txt")->m0p1
 makePlot<- function(data) {
   plotDataFrame<-data.frame()
   i <- 1
-  for (row in data) {
+  for (thing in data$V1) {
     if (i <= 1940) {
       i<-i+1
       next
     }
     
-    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V1[i],geno="A"))
-    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V2[i],geno="B"))
-    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V3[i],geno="b"))
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V1[i]^2/2 + data$V1[i]*data$V2[i]+data$V1[i]*data$V3[i]+data$V1[i]/2,geno="A"))
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=data$V2[i]^2/2 + data$V2[i]*data$V3[i]+data$V2[i]/2,geno="B"))
+    plotDataFrame<-rbind(plotDataFrame,data.frame(t=i-1940,f=(data$V3[i]^2)/2+data$V3[i]/2,geno="b"))
     i <- i + 1
   }  
   
+  
+  
   return(plotDataFrame)
 }
+
+makePlot(p0p1) -> pigeon0p1
+makePlot(p0p02) -> pigeon0p02
+
+plA<-ggplot(pigeon0p02,aes(t,f,fill=geno))+geom_area()+scale_x_log10(breaks=c(1,10,100,1000),labels=c(1940,1950,2040,2940),name="year")+theme_classic()+scale_fill_manual(values=wes_palette("Royal1"),guide="none")+ylab(expression(italic(f * " (morph frequency)")))+theme(text = element_text(size=20))+theme(axis.line=element_line(size=1.4))
+plB<-ggplot(pigeon0p1,aes(t,f,fill=geno))+geom_area()+scale_x_log10(breaks=c(1,10,100,1000),labels=c(1940,1950,2040,2940),name=expression("year"))+theme_classic()+scale_fill_manual(values=wes_palette("Royal1"),name="genotype")+ylab("")+theme(text = element_text(size=20))+theme(axis.line=element_line(size=1.4))
+
+plot_grid(plA,plB,labels=c("A","B"),rel_widths = c(1,1.3))
+
+ggsave("~/projects/Pigeon/Figures/Pigeon.Phoenix.pdf",width=12,height=3.6)
+
+
+#make NY plots? They're boring
 
