@@ -58,5 +58,3 @@ for sa in np.arange(-0.01,0.01,0.0001):
     else:
         feas = 2
     print(dDelQ(sa,0.992,-0.01,1),sa,-0.01,0.992,feas)
-
-

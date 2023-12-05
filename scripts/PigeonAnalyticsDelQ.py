@@ -23,7 +23,7 @@ for q in np.arange(0,1,0.001):
 for q in np.arange(0,1,0.001):
     print(delta_q(q,0.01,1,0.01,1),q,0.01,1)  
 
-# negative dependence, recessive weaker
+# negative dependence, recessive directional selection stronger
 for q in np.arange(0,1,0.001):
     print(delta_q(q,-0.01,0.995,-0.01,1),q,-0.01,0.995)  
 
