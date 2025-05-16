@@ -8,7 +8,7 @@ python simpleSimCode/scripts/tempAbove_x_TNY.py  > tempData/diff_dA_da.x_T.NY.tx
 
 # simulate pop-gen for different T thresholds
 # first argument is dx_T, difference in UCT between morphs 
-# second argument is rate per yaer of increase in mean temp (in degrees C)
+# second argument is rate per year of increase in mean temp (in degrees C)
 python simpleSimCode/scripts/sim.py  0.5 0.05 noFlip > simData/sim.dx_T.0.5.d.0.05.noFlip.txt
 python simpleSimCode/scripts/sim.py  0.5 0.05 Flip > simData/sim.dx_T.0.5.d.0.05.Flip.txt
 

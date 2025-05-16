@@ -14,11 +14,19 @@ same command (`python setup.py install`) as above.
 
 Some additional software may be required to run some of the commands. This includes [`numpy`](https://numpy.org/), [`scipy`](https://scipy.org/), and [`mpmath`](https://mpmath.org/). 
 
-## Main figures
+## Data
+
+To make the data for the figures, first run `./makeAnalyticalFigData.sh` and `./makeFigures.sh`. The latter file may take some time (minutes) to execute.
+
+## Figures
 
 ### Figure 1
-To make Figure 1, first run `./makeAnalyticalFigData.sh`, which  
+To make Figure 1, first run `./makeAnalyticalFigData.sh`. To plot the data, use the `R` script in `scripts/ModelFigs.R`.
 
-## Supplemental figures
+### Figures 2 & 3
+To make Figures 2 and 3, first run `./makeFigures.sh`. To plot the data, use the R script in `scripts/empPhoenixTemp.R`. This script uses data from
+the file 'tempData/Phoenix.tMax.1940.txt', which includes max daily temperatures (converted to Celcius) from Phoenix in 1940. The original data from the weather station is contained in the file  `tempData/Phoenix.GHCND:USW00023183.tMax.csv`.
 
-### Figure S1
+### Figures 4 & 5
+To make Figures 4 and 5, first run `./makeFigures.sh`. The code for plotting thess figures is contained in `scripts/popGenModels.R`.
+
