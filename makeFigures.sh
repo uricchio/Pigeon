@@ -17,13 +17,15 @@
 # simulate pop-gen for different T thresholds
 # first argument is dx_T, difference in UCT between morphs 
 # second argument is rate per yaer of increase in mean temp (in degrees C)
-#python simpleSimCode/scripts/sim.py  2 0.02 > simData/sim.dx_T.2.d.0.02.txt
-#python simpleSimCode/scripts/sim.py  0.5 0.05 > simData/sim.dx_T.0.5.d.0.05.txt
-#python simpleSimCode/scripts/sim.py  0.5 0.1 > simData/sim.dx_T.0.5.d.0.1.txt
+#python simpleSimCode/scripts/sim.py  0.5 0.05 noFlip > simData/sim.dx_T.0.5.d.0.05.noFlip.txt
+#python simpleSimCode/scripts/sim.py  0.5 0.05 Flip > simData/sim.dx_T.0.5.d.0.05.Flip.txt
+
+python simpleSimCode/scripts/sim.py 1 0.05 noFlip > simData/sim.dx_T.1.d.0.05.noFlip.txt
+python simpleSimCode/scripts/sim.py 1 0.05 Flip > simData/sim.dx_T.1.d.0.05.Flip.txt
 
 # simulate pigeon populations
-python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv > simData/sim.Pigeon.d.0.02.Phoenix.txt
-python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv  > simData/sim.Pigeon.d.0.1.Phoenix.txt
-python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.02.Manhattan.txt
-python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.1.Manhattan.txt
+#python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv > simData/sim.Pigeon.d.0.02.Phoenix.txt
+#python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv  > simData/sim.Pigeon.d.0.1.Phoenix.txt
+#python scripts/simPigeonPop.py 0.02 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.02.Manhattan.txt
+#python scripts/simPigeonPop.py 0.1 /Users/telemacher/projects/Pigeon/tempData/Manhattan.GHCND:USW00094728.tMax.csv > simData/sim.Pigeon.d.0.1.Manhattan.txt
 

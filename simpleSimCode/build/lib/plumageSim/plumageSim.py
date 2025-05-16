@@ -16,9 +16,9 @@ from scipy.stats import skewnorm
 
 class SimulatePlumage():
 
-    def __init__(self,N=1000000,s_a=-0.000001,s_A=-0.000001,p=0.5,S=0.001,x_T=48, dx_T=1, d=0.01,
+    def __init__(self,N=1000000,s_a=-0.00001,s_A=-0.01,p=0.5,S=0.0005,x_T=48, dx_T=0.5, d=0.01,
                   tempFile="/Users/uricchio/projects/Pigeon/tempData/Phoenix.GHCND:USW00023183.tMax.csv",
-                  year =1940):
+                  year =1940,flip=False):
         self.N = N
         self.s_A = s_A
         self.p = p
@@ -32,11 +32,17 @@ class SimulatePlumage():
         self.paramsSkewNorm = {}
         self.year = year
         self.year0 = year
+        self.flip = flip
         self.tempFile = tempFile
         self.daysAbove = {}
         self.getSkewNormal()
         self.getDays()
         self.s_a = self.get_sa(p)
+
+    def dDelQ(self):
+        num =- 2*(self.s_a+self.s_A)**2 * (self.qEq()**3) * (self.qEq()-1)
+        den = self.s_A*(1-self.S)**self.d_a + self.s_a*(self.s_A+(1-self.S)**self.d_A)
+        return num/den
 
     # function to do W-F model given current population status
     def nextGen(self):
@@ -51,14 +57,14 @@ class SimulatePlumage():
         fExp = (self.p*Waa + (self.p**0.5)*(1-self.p**0.5)*WA)/(self.p*Waa + (1-self.p)*WA)
 
         if fExp < 0:
-            fExp = 0. # 1./(self.N*2)
+            fExp = 0. 
         elif fExp > 1:
-            fExp = 1. #1-1./(self.N*2)
+            fExp = 1. 
 
         f = np.random.binomial(2*self.N, fExp)/(self.N*2)
         self.p = f**2
 
-        print(self.p,fExp**2,self.qEq(),self.p*(self.x_T-self.dx_T)+(1-self.p)*(self.x_T),((1-self.S)**self.d_a-(1-self.S)**self.d_A),self.S*(self.d_A-self.d_a),self.x_T,self.year-1939)
+        print(self.p,fExp**2,self.qEq(),self.p*(self.x_T-self.dx_T)+(1-self.p)*(self.x_T),((1-self.S)**self.d_A-(1-self.S)**self.d_a),self.S*(self.d_a-self.d_A),self.x_T,self.year-1939,self.s_a,self.dDelQ())
 
         self.year += 1
         return
@@ -71,14 +77,17 @@ class SimulatePlumage():
             offset = self.d*(2100-self.year0)
 
         year = self.year0
-        self.d_a = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
-        self.d_A = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_A = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+        self.d_a = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))   
+        if self.flip:
+            self.d_a = 183*(1-skewnorm.cdf(self.x_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))
+            self.d_A = 183*(1-skewnorm.cdf(self.x_T-self.dx_T,a=self.paramsSkewNorm[year][0],loc=offset+self.paramsSkewNorm[year][1],scale=self.paramsSkewNorm[year][2]))   
 
     def qEq(self):
-        return ((self.s_A - ((1-self.S)**self.d_a-(1-self.S)**self.d_A))/(self.s_A+self.s_a))
+        return ((self.s_A + (-(1-self.S)**self.d_a+(1-self.S)**self.d_A))/(self.s_A+self.s_a))
 
     def get_sa(self,q):
-        return ((1-q)*self.s_A-(1-self.S)**self.d_a+(1-self.S)**self.d_A)/q
+        return ((1-q)*self.s_A+(1-self.S)**self.d_A-(1-self.S)**self.d_a)/q
  
     def getSkewNormal(self,prParams=False):
         fh=open(self.tempFile,'r')
