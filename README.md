@@ -12,6 +12,8 @@ running `python setup.py install` at the command line. If you do not have root p
 There is a second set of source files in the directory `simpleSimCode`. To install this software, `cd` into this directory and run the 
 same command (`python setup.py install`) as above.
 
+Some additional software may be required to run some of the commands. This includes [`numpy`](https://numpy.org/), [`scipy`](https://scipy.org/), and [`mpmath`](https://mpmath.org/). 
+
 ## Main figures
 
 ### Figure 1
